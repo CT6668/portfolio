@@ -138,10 +138,18 @@ function updateProgress() {
     var pct = Math.round(loadedImages / totalImages * 100);
     progressEl.style.width = pct + '%';
     progressEl.setAttribute('data-pct', pct + '%');
+
+    // Update toast with real-time count
+    if (toastEl && loadedImages < totalImages) {
+        toastEl.textContent = '正在加载作品图片 ' + loadedImages + '/' + totalImages + ' 张...';
+    }
+
     if (loadedImages >= totalImages) {
         // Mark this work as fully loaded
         try { sessionStorage.setItem('work_loaded_' + getCurrentWorkId(), '1'); } catch(e) {}
-        // Progress bar disappears immediately at 100%
+        // Hide toast immediately
+        if (toastEl) { toastEl.classList.remove('show'); }
+        // Progress bar disappears at 100%
         setTimeout(function() {
             if (progressEl) {
                 progressEl.style.opacity = '0';
@@ -503,10 +511,11 @@ if (page.type === 'image') {
 
     initProgress(imageCount, skipProgressAndToast);
 
-    // Show loading status toast (only first time, never for cached works)
-    if (!skipProgressAndToast && imageCount > 3) {
-        showToast('作品资源较大，正在加载中...', 3000);
-    }
+// Show loading status toast (only first time, never for cached works)
+// Use very long duration so toast stays visible until loading completes (updateProgress hides it)
+if (!skipProgressAndToast && imageCount > 3) {
+showToast('正在加载作品图片 0/' + imageCount + ' 张...', 999999);
+}
 
     // Start loading immediately
     preloadedSet = {};
