@@ -86,9 +86,13 @@ function showToast(msg, duration) {
 var progressEl = null;
 var totalImages = 0;
 var loadedImages = 0;
-function initProgress(total) {
+var progressDisabled = false; // Skip progress bar if all cached
+
+function initProgress(total, disabled) {
     totalImages = total;
     loadedImages = 0;
+    progressDisabled = !!disabled;
+    if (progressDisabled) return; // Don't show progress bar
     if (!progressEl) {
         progressEl = document.createElement('div');
         progressEl.className = 'load-progress';
@@ -100,10 +104,15 @@ function initProgress(total) {
 }
 function updateProgress() {
     loadedImages++;
-    if (!progressEl) return;
+    if (progressDisabled || !progressEl) return;
     var pct = Math.round(loadedImages / totalImages * 100);
     progressEl.style.width = pct + '%';
     if (loadedImages >= totalImages) {
+        // Mark this work as fully loaded
+        try {
+            var workId = getCurrentWorkId();
+            sessionStorage.setItem('work_loaded_' + workId, '1');
+        } catch(e) {}
         setTimeout(function() { progressEl.classList.add('done'); }, 300);
     }
 }
@@ -430,15 +439,45 @@ if (page.type === 'image') {
 
     // Initialize smart image loading
     var imageCount = work.pages.filter(function(p) { return p.type === 'image'; }).length;
-    initProgress(imageCount);
+
+    // Check if this work was already fully loaded (cached)
+    var alreadyLoaded = false;
+    try {
+        alreadyLoaded = sessionStorage.getItem('work_loaded_' + workId) === '1';
+    } catch(e) {}
+
+    // Try to detect cached images: probe first few images
+    var cachedCount = 0;
+    for (var ci = 0; ci < allImageItems.length; ci++) {
+        var probe = new Image();
+        probe.src = allImageItems[ci].src;
+        if (probe.complete && probe.naturalWidth > 0) {
+            cachedCount++;
+        }
+    }
+    var allCached = cachedCount === allImageItems.length && allImageItems.length > 0;
+
+    // If all images are cached (from preload or previous visit), skip progress & toast
+    var skipProgressAndToast = alreadyLoaded || allCached;
+
+    initProgress(imageCount, skipProgressAndToast);
 
     // Start loading: first image immediately, rest on scroll
     preloadedSet = {};
-    preloadAhead();
 
-    // Toast hint
-    if (imageCount > 3) {
-        showToast('正在加载作品图片，请稍候...', 2000);
+    if (allCached) {
+        // All images are in browser cache, load them all immediately
+        for (var ai = 0; ai < allImageItems.length; ai++) {
+            preloadedSet[allImageItems[ai].src] = true;
+            enqueueImageLoad(allImageItems[ai].img, allImageItems[ai].src, allImageItems[ai].placeholder);
+        }
+    } else {
+        preloadAhead();
+
+        // Toast hint only if not cached
+        if (!skipProgressAndToast && imageCount > 3) {
+            showToast('正在加载作品图片，请稍候...', 2000);
+        }
     }
 
     // Listen for scroll to trigger loading more
