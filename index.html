@@ -6,9 +6,8 @@
     <title>严佳祺 · 2026 设计作品集</title>
     <meta name="description" content="严佳祺 - UI 设计师 · 2026 设计作品集">
     <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.loli.net" crossorigin>
+    <link href="https://fonts.loli.net/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
 <script>
@@ -79,7 +78,7 @@
             <div class="hero-visual">
                 <div class="visual-glow"></div>
                 <div class="visual-float" id="visualFloat">
-                    <img src="assets/typewriter-hero.png" alt="3D 打字机" class="typewriter-img">
+                    <img src="assets/typewriter-hero.png" alt="3D 打字机" class="typewriter-img" loading="eager" decoding="async">
                 </div>
                 <span class="deco-star star-1">✦</span>
                 <span class="deco-star star-2">✦</span>
@@ -123,7 +122,7 @@
             <!-- 左：个人信息卡 -->
             <aside class="resume-side reveal-up">
 <div class="photo-placeholder">
-<img src="assets/photo.jpg" alt="严佳祺证件照" class="photo-img">
+<img src="assets/photo.jpg" alt="严佳祺证件照" class="photo-img" loading="lazy" decoding="async">
 </div>
                 <div class="side-name-row">
                     <div>
@@ -166,7 +165,7 @@
                             </div>
                             <div class="exp-body">
                                 <div class="exp-head">
-                                    <img src="assets/logo-meituan.png" alt="美团" class="exp-logo-icon">
+                                    <img src="assets/logo-meituan.png" alt="美团" class="exp-logo-icon" loading="lazy">
                                     <h5 class="exp-company">北京三快在线科技有限公司 – UI 设计</h5>
                                 </div>
                                 <ul class="exp-desc">
@@ -186,7 +185,7 @@
                             </div>
                             <div class="exp-body">
                                 <div class="exp-head">
-<img src="assets/logo-kingsoft.png" alt="金山云" class="exp-logo-icon">
+<img src="assets/logo-kingsoft.png" alt="金山云" class="exp-logo-icon" loading="lazy">
 <h5 class="exp-company">北京金山云网络技术有限公司 – 体验设计</h5>
                                 </div>
                                 <ul class="exp-desc">
@@ -206,7 +205,7 @@
                             </div>
                             <div class="exp-body">
                                 <div class="exp-head">
-<img src="assets/logo-telecom.png" alt="中国电信" class="exp-logo-icon">
+<img src="assets/logo-telecom.png" alt="中国电信" class="exp-logo-icon" loading="lazy">
 <h5 class="exp-company">中国电信人工智能研究院 – AIGC 影视设计</h5>
                                 </div>
                                 <ul class="exp-desc">
@@ -222,16 +221,16 @@
                 <!-- 技能标签框（切图版） -->
                 <div class="skill-tabs reveal-up">
                     <div class="skill-tab skill-tab-img">
-                        <img src="assets/skill-ui.png" alt="界面设计 - Mastergo / Figma">
+                        <img src="assets/skill-ui.png" alt="界面设计 - Mastergo / Figma" loading="lazy">
                     </div>
                     <div class="skill-tab skill-tab-img">
-                        <img src="assets/skill-motion.png" alt="动效设计 - Protopie / AE">
+                        <img src="assets/skill-motion.png" alt="动效设计 - Protopie / AE" loading="lazy">
                     </div>
                     <div class="skill-tab skill-tab-img">
-                        <img src="assets/skill-code.png" alt="AI 编程 - Cloud Code">
+                        <img src="assets/skill-code.png" alt="AI 编程 - Cloud Code" loading="lazy">
                     </div>
                     <div class="skill-tab skill-tab-img">
-                        <img src="assets/skill-aigc.png" alt="AIGC - 即梦">
+                        <img src="assets/skill-aigc.png" alt="AIGC - 即梦" loading="lazy">
                     </div>
                 </div>
             </div>
@@ -248,8 +247,8 @@
         <div class="works-accordion reveal-up">
 <a href="work-detail.html?id=1" class="wa-card wa-card-1 is-active" data-index="0">
 <span class="wa-tag">品牌视觉</span>
-<img src="assets/work-cover-1.jpg" alt="品牌视觉" class="wa-cover" loading="eager" decoding="async">
-                <div class="wa-overlay"></div>
+<img src="assets/work-cover-1.jpg" alt="品牌视觉" class="wa-cover" loading="lazy" decoding="async">
+<div class="wa-overlay"></div>
                 <div class="wa-body">
                     <span class="wa-no">01</span>
                     <h3 class="wa-name">项目一 · 品牌视觉</h3>
@@ -260,8 +259,8 @@
 
 <a href="work-detail.html?id=2" class="wa-card wa-card-2" data-index="1">
 <span class="wa-tag">界面设计</span>
-<img src="assets/work-cover-2.jpg" alt="界面设计" class="wa-cover" loading="eager" decoding="async">
-                <div class="wa-overlay"></div>
+<img src="assets/work-cover-2.jpg" alt="界面设计" class="wa-cover" loading="lazy" decoding="async">
+<div class="wa-overlay"></div>
                 <div class="wa-body">
                     <span class="wa-no">02</span>
                     <h3 class="wa-name">项目二 · 界面设计</h3>
@@ -272,8 +271,8 @@
 
 <a href="work-detail.html?id=3" class="wa-card wa-card-3" data-index="2">
 <span class="wa-tag">动效设计</span>
-<img src="assets/work-cover-3.png" alt="动效设计" class="wa-cover" loading="eager" decoding="async">
-                <div class="wa-overlay"></div>
+<img src="assets/work-cover-3.png" alt="动效设计" class="wa-cover" loading="lazy" decoding="async">
+<div class="wa-overlay"></div>
                 <div class="wa-body">
                     <span class="wa-no">03</span>
                     <h3 class="wa-name">项目三 · 动效设计</h3>
@@ -284,8 +283,8 @@
 
 <a href="work-detail.html?id=4" class="wa-card wa-card-4" data-index="3">
 <span class="wa-tag">AIGC 视觉</span>
-<img src="assets/work-cover-4.jpg" alt="AIGC 视觉" class="wa-cover" loading="eager" decoding="async">
-                <div class="wa-overlay"></div>
+<img src="assets/work-cover-4.jpg" alt="AIGC 视觉" class="wa-cover" loading="lazy" decoding="async">
+<div class="wa-overlay"></div>
                 <div class="wa-body">
                     <span class="wa-no">04</span>
                     <h3 class="wa-name">项目四 · AIGC 视觉</h3>
@@ -313,7 +312,7 @@
 <span class="c-value">yanjiaqi524138@163.com</span>
 </div>
 <div class="c-card reveal-up" style="--i:1; cursor:pointer" onclick="copyValue(this)">
-<img src="assets/icon-wechat.png" alt="微信" class="c-ico-img">
+<img src="assets/icon-wechat.png" alt="微信" class="c-ico-img" loading="lazy">
 <span class="c-label">微信</span>
 <span class="c-value">Gemini_200524</span>
 </div>
