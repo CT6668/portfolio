@@ -307,55 +307,38 @@ function showToast(msg) {
     }, 1500);
 }
 
-/* ---------- 首页后台预加载作品集图片 ---------- */
+/* ---------- 首页后台预加载作品集图片(CDN加速) ---------- */
 (function() {
-    // All work image URLs (must match work-detail.js data)
-    var workImages = [
-        'assets/work-cover-1.jpg','assets/work1-page2.jpg','assets/work1-page03.jpg',
-        'assets/work1-page04.jpg','assets/work1-page05.jpg','assets/work1-page06.jpg',
-        'assets/work1-page07.jpg','assets/work1-page08.jpg','assets/work1-page09.jpg',
-        'assets/work1-page10.jpg','assets/work1-page11.jpg','assets/work1-page12.jpg',
-        'assets/work1-page13.jpg','assets/work1-page14.jpg',
-        'assets/work-cover-2.jpg','assets/work2-page16.jpg','assets/work2-page17.jpg',
-        'assets/work2-page18.jpg','assets/work2-page19.jpg','assets/work2-page20.jpg',
-        'assets/work2-page21.jpg','assets/work2-page22.jpg','assets/work2-page24.jpg',
-        'assets/work-cover-3.jpg','assets/work3-page26.jpg','assets/work3-page27.jpg',
-        'assets/work3-page28.jpg','assets/work3-page29.jpg','assets/work3-page30.jpg',
-        'assets/work-cover-4.jpg','assets/work4-3d.jpg'
+    // CDN prefix (must match work-detail.js)
+    var CDN = 'https://cdn.jsdelivr.net/gh/CT6668/portfolio@main/';
+    function cdn(path) {
+        if (location.protocol === 'file:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1') return path;
+        return CDN + path;
+    }
+
+    // Only preload cover images (small, most important for first impression)
+    var coverImages = [
+        'assets/work-cover-1.jpg', 'assets/work-cover-2.jpg',
+        'assets/work-cover-3.jpg', 'assets/work-cover-4.jpg'
     ];
 
     var preloadIndex = 0;
-    var PRELOAD_BATCH = 2; // Load 2 at a time in background
-    var preloadActive = 0;
 
     function preloadNext() {
-        while (preloadActive < PRELOAD_BATCH && preloadIndex < workImages.length) {
-            var img = new Image();
-            var src = workImages[preloadIndex++];
-            preloadActive++;
-            img.onload = img.onerror = function() {
-                preloadActive--;
-                preloadNext();
-            };
-            img.src = src;
-        }
-        // Mark completed works in sessionStorage
-        if (preloadIndex >= workImages.length && preloadActive === 0) {
-            try {
-                sessionStorage.setItem('preloaded_works', 'all');
-            } catch(e) {}
-        }
+        if (preloadIndex >= coverImages.length) return;
+        var img = new Image();
+        img.onload = img.onerror = function() { preloadNext(); };
+        img.src = cdn(coverImages[preloadIndex++]);
     }
 
-    // Start preloading after page is fully loaded and idle
+    // Start preloading covers after page is fully loaded + 3s idle
     window.addEventListener('load', function() {
-        // Wait 2 seconds to not compete with homepage resources
         setTimeout(function() {
             if (window.requestIdleCallback) {
                 window.requestIdleCallback(function() { preloadNext(); });
             } else {
                 preloadNext();
             }
-        }, 2000);
+        }, 3000);
     });
 })();

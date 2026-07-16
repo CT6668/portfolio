@@ -127,6 +127,19 @@ button.nav-cta svg {
     transition: width 0.3s ease;
     border-radius: 0 2px 2px 0;
 }
+.load-progress::after {
+    content: attr(data-pct);
+    position: absolute;
+    right: 0;
+    top: 6px;
+    font-size: 11px;
+    color: #FF6633;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.9;
+    pointer-events: none;
+    padding-right: 4px;
+}
 .load-progress.done {
     opacity: 0;
     transition: width 0.3s ease, opacity 0.5s ease 0.3s;

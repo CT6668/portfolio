@@ -1,5 +1,17 @@
 // ========== Work data ==========
 // pages 数组中每个对象: { type: 'image' | 'video' | 'pdf', src: '路径' }
+
+// CDN prefix: use jsDelivr to accelerate GitHub assets from China
+var CDN_PREFIX = 'https://cdn.jsdelivr.net/gh/CT6668/portfolio@main/';
+
+function cdnUrl(path) {
+    // In local development (file:// or localhost), use relative path
+    if (location.protocol === 'file:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+        return path;
+    }
+    return CDN_PREFIX + path;
+}
+
 var works = [
     {
         id: 1,
@@ -86,13 +98,13 @@ function showToast(msg, duration) {
 var progressEl = null;
 var totalImages = 0;
 var loadedImages = 0;
-var progressDisabled = false; // Skip progress bar if all cached
+var progressDisabled = false;
 
 function initProgress(total, disabled) {
     totalImages = total;
     loadedImages = 0;
     progressDisabled = !!disabled;
-    if (progressDisabled) return; // Don't show progress bar
+    if (progressDisabled) return;
     if (!progressEl) {
         progressEl = document.createElement('div');
         progressEl.className = 'load-progress';
@@ -101,12 +113,22 @@ function initProgress(total, disabled) {
     progressEl.style.width = '0%';
     progressEl.classList.remove('done');
     progressEl.style.opacity = '1';
+    // Update percentage text
+    updateProgressText();
 }
+
+function updateProgressText() {
+    if (progressDisabled || !progressEl) return;
+    var pct = totalImages > 0 ? Math.round(loadedImages / totalImages * 100) : 0;
+    progressEl.setAttribute('data-pct', pct + '%');
+}
+
 function updateProgress() {
     loadedImages++;
     if (progressDisabled || !progressEl) return;
     var pct = Math.round(loadedImages / totalImages * 100);
     progressEl.style.width = pct + '%';
+    progressEl.setAttribute('data-pct', pct + '%');
     if (loadedImages >= totalImages) {
         // Mark this work as fully loaded
         try {
@@ -118,7 +140,7 @@ function updateProgress() {
 }
 
 // ========== Smart image loader (controlled concurrency) ==========
-var CONCURRENT_LIMIT = 2; // Max simultaneous downloads
+var CONCURRENT_LIMIT = 4; // Optimized: 4 concurrent (CDN uses different domain, no conflict)
 var loadQueue = [];
 var activeLoads = 0;
 
@@ -149,19 +171,23 @@ function loadImage(item) {
         }
         updateProgress();
         processQueue();
-        // Preload next 2 images ahead
+        // Preload next images ahead
         preloadAhead();
     };
 
     img.onerror = function() {
         activeLoads--;
         if (item.retries < 2) {
-            // Auto retry with delay
+            // Auto retry with delay, try direct URL on retry
             item.retries++;
+            if (item.retries === 2 && item.src.indexOf('cdn.jsdelivr.net') !== -1) {
+                // Fallback to direct GitHub Pages URL on last retry
+                item.src = item.src.replace(CDN_PREFIX, '');
+            }
             setTimeout(function() {
                 loadQueue.unshift(item);
                 processQueue();
-            }, 1000 * item.retries);
+            }, 800 * item.retries);
         } else {
             // Show error state with retry button
             img.style.display = 'none';
@@ -185,6 +211,7 @@ function loadImage(item) {
                     img.style.display = 'block';
                     img.classList.add('loading');
                     item.retries = 0;
+                    item.src = cdnUrl(item.originalSrc || item.src);
                     loadQueue.unshift(item);
                     processQueue();
                 });
@@ -205,10 +232,9 @@ function loadImage(item) {
 var allImageItems = [];
 var preloadedSet = {};
 function preloadAhead() {
-    // Find current scroll position and preload next few images
     var scrollY = window.scrollY || window.pageYOffset;
     var viewH = window.innerHeight;
-    var threshold = scrollY + viewH * 2; // 2 screens ahead
+    var threshold = scrollY + viewH * 3; // 3 screens ahead for smoother experience
 
     for (var i = 0; i < allImageItems.length; i++) {
         var info = allImageItems[i];
@@ -217,7 +243,7 @@ function preloadAhead() {
         var absTop = rect.top + scrollY;
         if (absTop < threshold) {
             preloadedSet[info.src] = true;
-            enqueueImageLoad(info.img, info.src, info.placeholder);
+            enqueueImageLoad(info.img, info.cdnSrc, info.placeholder);
         }
     }
 }
@@ -267,6 +293,12 @@ function buildPages() {
     var wrapper = document.getElementById('fp-wrapper');
     wrapper.innerHTML = '';
 
+    // Check if this work was already fully loaded (cached from previous visit in this session)
+    var alreadyLoaded = false;
+    try {
+        alreadyLoaded = sessionStorage.getItem('work_loaded_' + workId) === '1';
+    } catch(e) {}
+
     work.pages.forEach(function(page, i) {
         var section = document.createElement('div');
         section.className = 'fp-page';
@@ -295,10 +327,14 @@ if (page.type === 'image') {
             section.appendChild(placeholder);
             section.appendChild(img);
 
+            var imgCdnSrc = cdnUrl(page.src);
+
             // Register for smart loading
             allImageItems.push({
                 img: img,
                 src: page.src,
+                cdnSrc: imgCdnSrc,
+                originalSrc: page.src,
                 placeholder: placeholder,
                 section: section
             });
@@ -309,7 +345,7 @@ if (page.type === 'image') {
 
             var video = document.createElement('video');
             video.className = 'fp-page-video';
-            video.src = page.src;
+            video.src = page.src; // videos stay on direct URL (CDN doesn't help much for streaming)
             video.playsInline = true;
             video.preload = 'metadata';
 
@@ -440,45 +476,19 @@ if (page.type === 'image') {
     // Initialize smart image loading
     var imageCount = work.pages.filter(function(p) { return p.type === 'image'; }).length;
 
-    // Check if this work was already fully loaded (cached)
-    var alreadyLoaded = false;
-    try {
-        alreadyLoaded = sessionStorage.getItem('work_loaded_' + workId) === '1';
-    } catch(e) {}
-
-    // Try to detect cached images: probe first few images
-    var cachedCount = 0;
-    for (var ci = 0; ci < allImageItems.length; ci++) {
-        var probe = new Image();
-        probe.src = allImageItems[ci].src;
-        if (probe.complete && probe.naturalWidth > 0) {
-            cachedCount++;
-        }
-    }
-    var allCached = cachedCount === allImageItems.length && allImageItems.length > 0;
-
-    // If all images are cached (from preload or previous visit), skip progress & toast
-    var skipProgressAndToast = alreadyLoaded || allCached;
+    // Skip progress & toast if already loaded in this session
+    var skipProgressAndToast = alreadyLoaded;
 
     initProgress(imageCount, skipProgressAndToast);
 
-    // Start loading: first image immediately, rest on scroll
-    preloadedSet = {};
-
-    if (allCached) {
-        // All images are in browser cache, load them all immediately
-        for (var ai = 0; ai < allImageItems.length; ai++) {
-            preloadedSet[allImageItems[ai].src] = true;
-            enqueueImageLoad(allImageItems[ai].img, allImageItems[ai].src, allImageItems[ai].placeholder);
-        }
-    } else {
-        preloadAhead();
-
-        // Toast hint only if not cached
-        if (!skipProgressAndToast && imageCount > 3) {
-            showToast('正在加载作品图片，请稍候...', 2000);
-        }
+    // Show loading status toast (only first time)
+    if (!skipProgressAndToast && imageCount > 3) {
+        showToast('正在加载作品图片 (0/' + imageCount + ')...', 3000);
     }
+
+    // Start loading immediately
+    preloadedSet = {};
+    preloadAhead();
 
     // Listen for scroll to trigger loading more
     var scrollLoadHandler = function() {
