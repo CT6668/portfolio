@@ -53,6 +53,107 @@ button.nav-cta svg {
     display: block;
 }
 
+/* ========== Loading states ========== */
+
+/* Shimmer skeleton placeholder */
+.fp-page-placeholder {
+    width: 100%;
+    background: #f0f0f0;
+    position: relative;
+    overflow: hidden;
+}
+.fp-page-placeholder::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%; width: 50%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: shimmer 1.8s ease-in-out infinite;
+}
+@keyframes shimmer {
+    0% { left: -50%; }
+    100% { left: 150%; }
+}
+
+/* Image fade in */
+.fp-page-img.loading {
+    opacity: 0;
+}
+.fp-page-img.loaded {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+/* Error state with retry */
+.fp-page-error {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: #f5f5f5;
+    color: #999;
+    font-size: 14px;
+    min-height: 200px;
+}
+.fp-page-error-icon {
+    font-size: 32px;
+    opacity: 0.5;
+}
+.fp-page-retry-btn {
+    padding: 8px 24px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    background: #fff;
+    color: #666;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.fp-page-retry-btn:hover {
+    border-color: #999;
+    color: #333;
+}
+
+/* Global loading progress bar */
+.load-progress {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: linear-gradient(90deg, #FF6633, #FF8855);
+    z-index: 1000;
+    transition: width 0.3s ease;
+    border-radius: 0 2px 2px 0;
+}
+.load-progress.done {
+    opacity: 0;
+    transition: width 0.3s ease, opacity 0.5s ease 0.3s;
+}
+
+/* Toast notification */
+.toast {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(0,0,0,0.75);
+    color: #fff;
+    padding: 10px 24px;
+    border-radius: 20px;
+    font-size: 13px;
+    z-index: 1001;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    white-space: nowrap;
+}
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
 /* Video page */
 .fp-page-video {
     width: 100%;

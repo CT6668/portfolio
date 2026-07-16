@@ -66,6 +66,153 @@ var works = [
     }
 ];
 
+// ========== Toast notification ==========
+var toastEl = null;
+var toastTimer = null;
+function showToast(msg, duration) {
+    duration = duration || 3000;
+    if (!toastEl) {
+        toastEl = document.createElement('div');
+        toastEl.className = 'toast';
+        document.body.appendChild(toastEl);
+    }
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function() { toastEl.classList.remove('show'); }, duration);
+}
+
+// ========== Loading progress bar ==========
+var progressEl = null;
+var totalImages = 0;
+var loadedImages = 0;
+function initProgress(total) {
+    totalImages = total;
+    loadedImages = 0;
+    if (!progressEl) {
+        progressEl = document.createElement('div');
+        progressEl.className = 'load-progress';
+        document.body.appendChild(progressEl);
+    }
+    progressEl.style.width = '0%';
+    progressEl.classList.remove('done');
+    progressEl.style.opacity = '1';
+}
+function updateProgress() {
+    loadedImages++;
+    if (!progressEl) return;
+    var pct = Math.round(loadedImages / totalImages * 100);
+    progressEl.style.width = pct + '%';
+    if (loadedImages >= totalImages) {
+        setTimeout(function() { progressEl.classList.add('done'); }, 300);
+    }
+}
+
+// ========== Smart image loader (controlled concurrency) ==========
+var CONCURRENT_LIMIT = 2; // Max simultaneous downloads
+var loadQueue = [];
+var activeLoads = 0;
+
+function enqueueImageLoad(img, src, placeholder) {
+    loadQueue.push({ img: img, src: src, placeholder: placeholder, retries: 0 });
+    processQueue();
+}
+
+function processQueue() {
+    while (activeLoads < CONCURRENT_LIMIT && loadQueue.length > 0) {
+        var item = loadQueue.shift();
+        loadImage(item);
+    }
+}
+
+function loadImage(item) {
+    activeLoads++;
+    var img = item.img;
+    var placeholder = item.placeholder;
+
+    img.onload = function() {
+        activeLoads--;
+        img.classList.remove('loading');
+        img.classList.add('loaded');
+        // Remove placeholder
+        if (placeholder && placeholder.parentNode) {
+            placeholder.parentNode.removeChild(placeholder);
+        }
+        updateProgress();
+        processQueue();
+        // Preload next 2 images ahead
+        preloadAhead();
+    };
+
+    img.onerror = function() {
+        activeLoads--;
+        if (item.retries < 2) {
+            // Auto retry with delay
+            item.retries++;
+            setTimeout(function() {
+                loadQueue.unshift(item);
+                processQueue();
+            }, 1000 * item.retries);
+        } else {
+            // Show error state with retry button
+            img.style.display = 'none';
+            if (placeholder) {
+                placeholder.innerHTML = '';
+                placeholder.className = 'fp-page-error';
+                placeholder.style.height = placeholder.style.height || '400px';
+                var errorIcon = document.createElement('div');
+                errorIcon.className = 'fp-page-error-icon';
+                errorIcon.textContent = '⚠️';
+                var errorText = document.createElement('div');
+                errorText.textContent = '图片加载失败';
+                var retryBtn = document.createElement('button');
+                retryBtn.className = 'fp-page-retry-btn';
+                retryBtn.textContent = '点击重试';
+                retryBtn.addEventListener('click', function() {
+                    // Reset placeholder to shimmer
+                    placeholder.className = 'fp-page-placeholder';
+                    placeholder.innerHTML = '';
+                    placeholder.style.height = placeholder.dataset.height || '400px';
+                    img.style.display = 'block';
+                    img.classList.add('loading');
+                    item.retries = 0;
+                    loadQueue.unshift(item);
+                    processQueue();
+                });
+                placeholder.appendChild(errorIcon);
+                placeholder.appendChild(errorText);
+                placeholder.appendChild(retryBtn);
+            }
+            updateProgress();
+            showToast('部分图片加载失败，请点击重试', 4000);
+        }
+        processQueue();
+    };
+
+    img.src = item.src;
+}
+
+// Preload images near viewport
+var allImageItems = [];
+var preloadedSet = {};
+function preloadAhead() {
+    // Find current scroll position and preload next few images
+    var scrollY = window.scrollY || window.pageYOffset;
+    var viewH = window.innerHeight;
+    var threshold = scrollY + viewH * 2; // 2 screens ahead
+
+    for (var i = 0; i < allImageItems.length; i++) {
+        var info = allImageItems[i];
+        if (preloadedSet[info.src]) continue;
+        var rect = info.section.getBoundingClientRect();
+        var absTop = rect.top + scrollY;
+        if (absTop < threshold) {
+            preloadedSet[info.src] = true;
+            enqueueImageLoad(info.img, info.src, info.placeholder);
+        }
+    }
+}
+
 // ========== Format time helper ==========
 function formatTime(sec) {
     var m = Math.floor(sec / 60);
@@ -97,6 +244,15 @@ function buildPages() {
     var work = works.find(function(w) { return w.id === workId; });
     if (!work) return;
 
+    // Clean up previous state
+    if (window._scrollLoadHandler) {
+        window.removeEventListener('scroll', window._scrollLoadHandler);
+    }
+    allImageItems = [];
+    preloadedSet = {};
+    loadQueue = [];
+    activeLoads = 0;
+
     document.title = work.title + ' - Yan Jiaqi';
 
     var wrapper = document.getElementById('fp-wrapper');
@@ -107,24 +263,36 @@ function buildPages() {
         section.className = 'fp-page';
 
 if (page.type === 'image') {
-var img = document.createElement('img');
-img.className = 'fp-page-img';
-img.alt = work.title + ' - ' + (i + 1);
-img.loading = i === 0 ? 'eager' : 'lazy';
-img.decoding = 'async';
-// Set width/height for aspect ratio placeholder
-if (page.w && page.h) {
-    img.width = page.w;
-    img.height = page.h;
-    img.style.aspectRatio = page.w + '/' + page.h;
-    img.style.backgroundColor = '#f0f0f0';
-}
-// Fade in on load
-img.style.opacity = '0';
-img.style.transition = 'opacity 0.3s ease';
-img.onload = function() { this.style.opacity = '1'; this.style.backgroundColor = 'transparent'; };
-img.src = page.src;
+            // Create placeholder with correct aspect ratio
+            var placeholder = document.createElement('div');
+            placeholder.className = 'fp-page-placeholder';
+            var placeholderH = '56.25%'; // default 16:9
+            if (page.w && page.h) {
+                placeholderH = (page.h / page.w * 100) + '%';
+            }
+            placeholder.style.paddingBottom = placeholderH;
+            placeholder.dataset.height = placeholderH;
+
+            // Create image (hidden initially, no src yet)
+            var img = document.createElement('img');
+            img.className = 'fp-page-img loading';
+            img.alt = '';
+            img.decoding = 'async';
+            if (page.w && page.h) {
+                img.width = page.w;
+                img.height = page.h;
+            }
+
+            section.appendChild(placeholder);
             section.appendChild(img);
+
+            // Register for smart loading
+            allImageItems.push({
+                img: img,
+                src: page.src,
+                placeholder: placeholder,
+                section: section
+            });
         } else if (page.type === 'video') {
             // Video wrapper for custom controls
             var videoWrap = document.createElement('div');
@@ -259,6 +427,28 @@ img.src = page.src;
 
     // Scroll to top
     window.scrollTo(0, 0);
+
+    // Initialize smart image loading
+    var imageCount = work.pages.filter(function(p) { return p.type === 'image'; }).length;
+    initProgress(imageCount);
+
+    // Start loading: first image immediately, rest on scroll
+    preloadedSet = {};
+    preloadAhead();
+
+    // Toast hint
+    if (imageCount > 3) {
+        showToast('正在加载作品图片，请稍候...', 2000);
+    }
+
+    // Listen for scroll to trigger loading more
+    var scrollLoadHandler = function() {
+        preloadAhead();
+    };
+    window.addEventListener('scroll', scrollLoadHandler, { passive: true });
+
+    // Store handler for cleanup on page switch
+    window._scrollLoadHandler = scrollLoadHandler;
 }
 
 // ========== Adjust bottom padding for last image centering ==========
