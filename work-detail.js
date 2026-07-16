@@ -6,20 +6,20 @@ var works = [
         title: 'C端妙蛙',
         subtitle: '频道首页改版',
         pages: [
-            { type: 'image', src: 'assets/work-cover-1.jpg' },
-            { type: 'image', src: 'assets/work1-page2.png' },
-            { type: 'image', src: 'assets/work1-page03.png' },
-            { type: 'image', src: 'assets/work1-page04.jpg' },
-            { type: 'image', src: 'assets/work1-page05.jpg' },
-            { type: 'image', src: 'assets/work1-page06.jpg' },
-            { type: 'image', src: 'assets/work1-page07.jpg' },
-            { type: 'image', src: 'assets/work1-page08.jpg' },
-            { type: 'image', src: 'assets/work1-page09.jpg' },
-            { type: 'image', src: 'assets/work1-page10.png' },
-            { type: 'image', src: 'assets/work1-page11.png' },
-            { type: 'image', src: 'assets/work1-page12.jpg' },
-            { type: 'image', src: 'assets/work1-page13.jpg' },
-            { type: 'image', src: 'assets/work1-page14.png' },
+            { type: 'image', src: 'assets/work-cover-1.jpg', w: 2560, h: 1440 },
+            { type: 'image', src: 'assets/work1-page2.jpg', w: 2560, h: 1122 },
+            { type: 'image', src: 'assets/work1-page03.jpg', w: 2560, h: 1356 },
+            { type: 'image', src: 'assets/work1-page04.jpg', w: 2560, h: 1440 },
+            { type: 'image', src: 'assets/work1-page05.jpg', w: 2560, h: 1509 },
+            { type: 'image', src: 'assets/work1-page06.jpg', w: 2560, h: 1554 },
+            { type: 'image', src: 'assets/work1-page07.jpg', w: 2560, h: 1164 },
+            { type: 'image', src: 'assets/work1-page08.jpg', w: 2560, h: 2061 },
+            { type: 'image', src: 'assets/work1-page09.jpg', w: 2457, h: 2560 },
+            { type: 'image', src: 'assets/work1-page10.jpg', w: 2560, h: 1440 },
+            { type: 'image', src: 'assets/work1-page11.jpg', w: 2560, h: 1440 },
+            { type: 'image', src: 'assets/work1-page12.jpg', w: 2560, h: 1897 },
+            { type: 'image', src: 'assets/work1-page13.jpg', w: 2560, h: 1440 },
+            { type: 'image', src: 'assets/work1-page14.jpg', w: 2560, h: 1720 },
         ]
     },
     {
@@ -27,16 +27,16 @@ var works = [
         title: 'B端洋葱',
         subtitle: 'B端页面改版',
         pages: [
-            { type: 'image', src: 'assets/work-cover-2.jpg' },
-            { type: 'image', src: 'assets/work2-page16.png' },
-            { type: 'image', src: 'assets/work2-page17.png' },
-            { type: 'image', src: 'assets/work2-page18.png' },
-            { type: 'image', src: 'assets/work2-page19.png' },
-            { type: 'image', src: 'assets/work2-page20.jpg' },
-            { type: 'image', src: 'assets/work2-page21.png' },
-            { type: 'image', src: 'assets/work2-page22.jpg' },
+            { type: 'image', src: 'assets/work-cover-2.jpg', w: 2560, h: 1372 },
+            { type: 'image', src: 'assets/work2-page16.jpg', w: 2560, h: 685 },
+            { type: 'image', src: 'assets/work2-page17.jpg', w: 2560, h: 2361 },
+            { type: 'image', src: 'assets/work2-page18.jpg', w: 2560, h: 1440 },
+            { type: 'image', src: 'assets/work2-page19.jpg', w: 2560, h: 1038 },
+            { type: 'image', src: 'assets/work2-page20.jpg', w: 2309, h: 2560 },
+            { type: 'image', src: 'assets/work2-page21.jpg', w: 2560, h: 1036 },
+            { type: 'image', src: 'assets/work2-page22.jpg', w: 2560, h: 2126 },
             { type: 'video', src: 'assets/work2-page23.mp4' },
-            { type: 'image', src: 'assets/work2-page24.png' },
+            { type: 'image', src: 'assets/work2-page24.jpg', w: 2560, h: 1193 },
         ]
     },
     {
@@ -44,12 +44,12 @@ var works = [
         title: '平台组件',
         subtitle: 'CEM组件设计',
         pages: [
-            { type: 'image', src: 'assets/work-cover-3.png' },
-            { type: 'image', src: 'assets/work3-page26.png' },
-            { type: 'image', src: 'assets/work3-page27.png' },
-            { type: 'image', src: 'assets/work3-page28.png' },
-            { type: 'image', src: 'assets/work3-page29.png' },
-            { type: 'image', src: 'assets/work3-page30.png' },
+            { type: 'image', src: 'assets/work-cover-3.jpg', w: 2560, h: 1440 },
+            { type: 'image', src: 'assets/work3-page26.jpg', w: 2560, h: 1333 },
+            { type: 'image', src: 'assets/work3-page27.jpg', w: 2560, h: 1392 },
+            { type: 'image', src: 'assets/work3-page28.jpg', w: 1952, h: 2560 },
+            { type: 'image', src: 'assets/work3-page29.jpg', w: 2560, h: 825 },
+            { type: 'image', src: 'assets/work3-page30.jpg', w: 2560, h: 1144 },
         ]
     },
     {
@@ -57,11 +57,11 @@ var works = [
         title: '其他视觉',
         subtitle: '其他视觉展示',
         pages: [
-            { type: 'image', src: 'assets/work-cover-4.jpg' },
+            { type: 'image', src: 'assets/work-cover-4.jpg', w: 2560, h: 1440 },
             { type: 'video', src: 'assets/work4-video-motion.mp4' },
             { type: 'video', src: 'assets/work4-video1.mp4' },
             { type: 'video', src: 'assets/work4-video2.mp4' },
-            { type: 'image', src: 'assets/work4-3d.jpg' },
+            { type: 'image', src: 'assets/work4-3d.jpg', w: 2560, h: 1381 },
         ]
     }
 ];
@@ -106,13 +106,24 @@ function buildPages() {
         var section = document.createElement('div');
         section.className = 'fp-page';
 
-        if (page.type === 'image') {
-            var img = document.createElement('img');
-            img.className = 'fp-page-img';
-            img.src = page.src;
-            img.alt = work.title + ' - ' + (i + 1);
-            img.loading = i === 0 ? 'eager' : 'lazy';
-            img.decoding = 'async';
+if (page.type === 'image') {
+var img = document.createElement('img');
+img.className = 'fp-page-img';
+img.alt = work.title + ' - ' + (i + 1);
+img.loading = i === 0 ? 'eager' : 'lazy';
+img.decoding = 'async';
+// Set width/height for aspect ratio placeholder
+if (page.w && page.h) {
+    img.width = page.w;
+    img.height = page.h;
+    img.style.aspectRatio = page.w + '/' + page.h;
+    img.style.backgroundColor = '#f0f0f0';
+}
+// Fade in on load
+img.style.opacity = '0';
+img.style.transition = 'opacity 0.3s ease';
+img.onload = function() { this.style.opacity = '1'; this.style.backgroundColor = 'transparent'; };
+img.src = page.src;
             section.appendChild(img);
         } else if (page.type === 'video') {
             // Video wrapper for custom controls
