@@ -322,6 +322,12 @@ button.nav-cta svg {
 :fullscreen .scroll-hint {
     display: none;
 }
+:fullscreen .load-progress {
+    display: none;
+}
+:fullscreen .toast {
+    display: none;
+}
 
 /* ========== Mobile responsive ========== */
 @media (max-width: 900px) {
