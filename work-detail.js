@@ -62,7 +62,7 @@ var works = [
             { type: 'image', src: 'assets/work2-page20.jpg', w: 2560, h: 2837 },
             { type: 'image', src: 'assets/work2-page21.jpg', w: 2560, h: 1036 },
             { type: 'image', src: 'assets/work2-page22.jpg', w: 2560, h: 2126 },
-            { type: 'video', src: 'assets/work2-page23.mp4' },
+            { type: 'video', src: 'assets/work2-page23.mp4', poster: 'assets/poster-work2-page23.jpg' },
             { type: 'image', src: 'assets/work2-page24.jpg', w: 2560, h: 1193 },
         ]
     },
@@ -85,9 +85,9 @@ var works = [
         subtitle: '其他视觉展示',
         pages: [
             { type: 'image', src: 'assets/work-cover-4.jpg', w: 2560, h: 1440 },
-            { type: 'video', src: 'assets/work4-video-motion.mp4' },
-            { type: 'video', src: 'assets/work4-video1.mp4' },
-            { type: 'video', src: 'assets/work4-video2.mp4' },
+            { type: 'video', src: 'assets/work4-video-motion.mp4', poster: 'assets/poster-work4-motion.jpg' },
+            { type: 'video', src: 'assets/work4-video1.mp4', poster: 'assets/poster-work4-video1.jpg' },
+            { type: 'video', src: 'assets/work4-video2.mp4', poster: 'assets/poster-work4-video2.jpg' },
             { type: 'image', src: 'assets/work4-3d.jpg', w: 2560, h: 1381 },
         ]
     }
@@ -395,9 +395,13 @@ if (page.type === 'image') {
 
             var video = document.createElement('video');
             video.className = 'fp-page-video';
-            video.src = page.src; // videos stay on direct URL (CDN doesn't help much for streaming)
             video.playsInline = true;
             video.preload = 'metadata';
+            // Set poster (cover image) so video area shows a frame instead of black
+            if (page.poster) {
+                video.poster = page.poster;
+            }
+            video.src = page.src; // videos stay on direct URL (CDN doesn't help much for streaming)
 
             // Custom controls bar
             var controls = document.createElement('div');
