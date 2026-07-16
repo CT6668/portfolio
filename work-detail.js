@@ -2,7 +2,7 @@
 // pages 数组中每个对象: { type: 'image' | 'video' | 'pdf', src: '路径' }
 
 // CDN prefix: use jsDelivr to accelerate GitHub assets from China
-var CDN_PREFIX = 'https://cdn.jsdelivr.net/gh/CT6668/portfolio@main/';
+var CDN_PREFIX = 'https://testingcf.jsdelivr.net/gh/CT6668/portfolio@main/';
 
 function cdnUrl(path) {
     // In local development (file:// or localhost), use relative path
@@ -180,7 +180,7 @@ function loadImage(item) {
         if (item.retries < 2) {
             // Auto retry with delay, try direct URL on retry
             item.retries++;
-            if (item.retries === 2 && item.src.indexOf('cdn.jsdelivr.net') !== -1) {
+            if (item.retries === 2 && item.src.indexOf('jsdelivr.net') !== -1) {
                 // Fallback to direct GitHub Pages URL on last retry
                 item.src = item.src.replace(CDN_PREFIX, '');
             }

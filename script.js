@@ -310,7 +310,7 @@ function showToast(msg) {
 /* ---------- 首页后台预加载作品集图片(CDN加速) ---------- */
 (function() {
     // CDN prefix (must match work-detail.js)
-    var CDN = 'https://cdn.jsdelivr.net/gh/CT6668/portfolio@main/';
+    var CDN = 'https://testingcf.jsdelivr.net/gh/CT6668/portfolio@main/';
     function cdn(path) {
         if (location.protocol === 'file:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1') return path;
         return CDN + path;
