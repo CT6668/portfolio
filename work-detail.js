@@ -3,12 +3,27 @@
 
 // CDN prefix: use jsDelivr to accelerate GitHub assets from China
 var CDN_PREFIX = 'https://testingcf.jsdelivr.net/gh/CT6668/portfolio@main/';
+var cdnAvailable = true; // Assume CDN works; probe will update if it fails
+
+// Probe CDN availability on page load (use a tiny existing asset)
+(function() {
+    if (location.protocol === 'file:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1') return;
+    var probe = new Image();
+    var timer = setTimeout(function() {
+        cdnAvailable = false; // CDN timed out, fall back to direct URLs
+    }, 4000);
+    probe.onload = function() { clearTimeout(timer); cdnAvailable = true; };
+    probe.onerror = function() { clearTimeout(timer); cdnAvailable = false; };
+    probe.src = CDN_PREFIX + 'assets/icon-play.png?' + Date.now(); // cache bust
+})();
 
 function cdnUrl(path) {
     // In local development (file:// or localhost), use relative path
     if (location.protocol === 'file:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
         return path;
     }
+    // If CDN probe failed, use direct GitHub Pages URL
+    if (!cdnAvailable) return path;
     return CDN_PREFIX + path;
 }
 
@@ -200,16 +215,17 @@ function loadImage(item) {
     img.onerror = function() {
         activeLoads--;
         if (item.retries < 2) {
-            // Auto retry with delay, try direct URL on retry
+            // Auto retry: immediately switch to direct URL on first CDN failure
             item.retries++;
-            if (item.retries === 2 && item.src.indexOf('jsdelivr.net') !== -1) {
-                // Fallback to direct GitHub Pages URL on last retry
+            if (item.src.indexOf('jsdelivr.net') !== -1) {
+                // CDN failed — fall back to direct GitHub Pages URL
                 item.src = item.src.replace(CDN_PREFIX, '');
+                cdnAvailable = false; // Mark CDN as down for remaining images
             }
             setTimeout(function() {
                 loadQueue.unshift(item);
                 processQueue();
-            }, 800 * item.retries);
+            }, 500 * item.retries);
         } else {
             // Show error state with retry button
             img.style.display = 'none';
@@ -309,6 +325,10 @@ function buildPages() {
     preloadedSet = {};
     loadQueue = [];
     activeLoads = 0;
+
+    // Hide any existing toast from previous work
+    clearTimeout(toastTimer);
+    if (toastEl) { toastEl.classList.remove('show'); }
 
     document.title = work.title + ' - Yan Jiaqi';
 
@@ -511,11 +531,11 @@ if (page.type === 'image') {
 
     initProgress(imageCount, skipProgressAndToast);
 
-// Show loading status toast (only first time, never for cached works)
-// Use very long duration so toast stays visible until loading completes (updateProgress hides it)
-if (!skipProgressAndToast && imageCount > 3) {
-showToast('正在加载作品图片 0/' + imageCount + ' 张...', 999999);
-}
+    // Show loading status toast (only first time, never for cached works)
+    // Toast stays max 5 seconds; updateProgress() hides it sooner if loading completes
+    if (!skipProgressAndToast && imageCount > 3) {
+        showToast('正在加载作品图片 0/' + imageCount + ' 张...', 5000);
+    }
 
     // Start loading immediately
     preloadedSet = {};

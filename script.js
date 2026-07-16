@@ -342,12 +342,15 @@ function showToast(msg) {
     }, 1500);
 }
 
-/* ---------- 首页后台预加载作品集图片(CDN加速) ---------- */
+/* ---------- 首页后台预加载作品集图片(CDN加速，带可达性检测) ---------- */
 (function() {
     // CDN prefix (must match work-detail.js)
     var CDN = 'https://testingcf.jsdelivr.net/gh/CT6668/portfolio@main/';
+    var cdnOk = true;
+
     function cdn(path) {
         if (location.protocol === 'file:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1') return path;
+        if (!cdnOk) return path;
         return CDN + path;
     }
 
@@ -369,11 +372,24 @@ function showToast(msg) {
     // Start preloading covers after page is fully loaded + 3s idle
     window.addEventListener('load', function() {
         setTimeout(function() {
-            if (window.requestIdleCallback) {
-                window.requestIdleCallback(function() { preloadNext(); });
+            // Probe CDN first, then preload
+            if (location.protocol !== 'file:' && location.hostname !== 'localhost') {
+                var probe = new Image();
+                var t = setTimeout(function() { cdnOk = false; startPreload(); }, 4000);
+                probe.onload = function() { clearTimeout(t); cdnOk = true; startPreload(); };
+                probe.onerror = function() { clearTimeout(t); cdnOk = false; startPreload(); };
+                probe.src = CDN + 'assets/icon-play.png?' + Date.now();
             } else {
-                preloadNext();
+                startPreload();
             }
         }, 3000);
     });
+
+    function startPreload() {
+        if (window.requestIdleCallback) {
+            window.requestIdleCallback(function() { preloadNext(); });
+        } else {
+            preloadNext();
+        }
+    }
 })();
