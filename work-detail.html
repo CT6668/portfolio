@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作品详情 - Yan Jiaqi</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="work-detail.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 页面过渡遮罩 -->
+    <div class="page-transition active"></div>
+
+    <!-- 导航栏 -->
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-back-btn">
+                <span class="arrow">←</span> 返回首页
+            </a>
+            <div class="nav-center">
+                <a href="work-detail.html?id=1" class="nav-link">C端妙蛙</a>
+                <a href="work-detail.html?id=2" class="nav-link">B端洋葱</a>
+                <a href="work-detail.html?id=3" class="nav-link">平台组件</a>
+                <a href="work-detail.html?id=4" class="nav-link">其他视觉</a>
+            </div>
+            <button class="nav-cta" id="fullscreen-btn" onclick="toggleFullscreen()">全屏 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+        </div>
+    </nav>
+
+    <!-- 全屏分页滚动容器 -->
+    <div class="fp-container" id="fp-container">
+        <div class="fp-wrapper" id="fp-wrapper">
+            <!-- 页面由JS动态生成 -->
+        </div>
+    </div>
+
+    <!-- 向下滑动提示 -->
+    <div class="scroll-hint" id="scroll-hint">
+        <span class="scroll-hint-text">向下滑动</span>
+        <div class="scroll-hint-arrow">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+    </div>
+
+    <!-- 右侧圆点指示器 -->
+    <div class="fp-dots" id="fp-dots"></div>
+
+    <script src="work-detail.js"></script>
+</body>
+</html>

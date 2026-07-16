@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>严佳祺 · 2026 设计作品集</title>
+    <meta name="description" content="严佳祺 - UI 设计师 · 2026 设计作品集">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+<script>
+// 返回首页时立即隐藏页面、设置滚动位置，避免闪烁
+(function() {
+    var savedY = sessionStorage.getItem('indexScrollY');
+    if (savedY !== null) {
+        document.documentElement.style.visibility = 'hidden';
+        // 尽早设置滚动位置
+        window.addEventListener('DOMContentLoaded', function() {
+            window.scrollTo({ top: parseInt(savedY), behavior: 'instant' });
+            // 显示页面
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.documentElement.style.visibility = '';
+                });
+            });
+        });
+    }
+})();
+</script>
+
+    <!-- 顶部导航 -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-inner">
+<div class="nav-logo">
+<span class="logo-dot"></span>
+严佳祺<span class="logo-en">/ YAN JIAQI</span>
+</div>
+            <div class="nav-links">
+                <a href="#hero" class="nav-link">首页</a>
+                <a href="#about" class="nav-link">关于</a>
+                <a href="#works" class="nav-link">作品</a>
+                <a href="#contact" class="nav-link">联系</a>
+            </div>
+            <a href="#contact" class="nav-cta">联系我 <span class="arrow">→</span></a>
+            <button class="nav-toggle" id="navToggle" aria-label="菜单">
+                <span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ============ 首屏 Hero ============ -->
+    <header id="hero" class="hero">
+        <div class="hero-bg-grid"></div>
+        <div class="hero-inner">
+            <div class="hero-text">
+<p class="hero-eyebrow reveal-up">
+<span class="wave">👋</span> Hello,<br>I am a UI designer
+</p>
+                <h1 class="hero-title">
+                    <span class="line" data-split><span class="accent">2026</span></span>
+                    <span class="line" data-split>设计作品集</span>
+                </h1>
+<div class="hero-meta reveal-up">
+<div class="meta-item"><b>硕士</b><span>北服本硕连读</span></div>
+<div class="meta-divider"></div>
+<div class="meta-item"><b>AI</b><span>Coding能力</span></div>
+<div class="meta-divider"></div>
+<div class="meta-item"><b>2+</b><span>垂直实习经验</span></div>
+</div>
+<div class="hero-actions reveal-up">
+<a href="#works" class="btn btn-dark">查看作品 <span class="arrow">→</span></a>
+<a href="#contact" class="btn btn-ghost">联系我</a>
+</div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="visual-glow"></div>
+                <div class="visual-float" id="visualFloat">
+                    <img src="assets/typewriter-hero.png" alt="3D 打字机" class="typewriter-img">
+                </div>
+                <span class="deco-star star-1">✦</span>
+                <span class="deco-star star-2">✦</span>
+                <span class="deco-star star-3">✦</span>
+            </div>
+        </div>
+
+        <a href="#about" class="scroll-hint">
+            <span>向下滚动</span>
+            <span class="scroll-line"></span>
+        </a>
+
+        <!-- 底部滚动跑马灯 -->
+        <div class="marquee">
+            <div class="marquee-track">
+                <div class="mq-group">
+                    <span>界面设计</span><span class="m-dot">✦</span>
+                    <span>动效设计</span><span class="m-dot">✦</span>
+                    <span>AI 编程</span><span class="m-dot">✦</span>
+                    <span>AIGC 视觉</span><span class="m-dot">✦</span>
+                    <span>品牌视觉</span><span class="m-dot">✦</span>
+                </div>
+                <div class="mq-group" aria-hidden="true">
+                    <span>界面设计</span><span class="m-dot">✦</span>
+                    <span>动效设计</span><span class="m-dot">✦</span>
+                    <span>AI 编程</span><span class="m-dot">✦</span>
+                    <span>AIGC 视觉</span><span class="m-dot">✦</span>
+                    <span>品牌视觉</span><span class="m-dot">✦</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============ 关于我 ============ -->
+    <section id="about" class="about">
+        <div class="section-head reveal-up">
+<h2 class="section-title">关于我</h2>
+        </div>
+
+        <div class="resume">
+            <!-- 左：个人信息卡 -->
+            <aside class="resume-side reveal-up">
+<div class="photo-placeholder">
+<img src="assets/photo.jpg" alt="严佳祺证件照" class="photo-img">
+</div>
+                <div class="side-name-row">
+                    <div>
+                        <h3 class="side-name">严佳祺</h3>
+                        <p class="side-name-en">Yan Jiaqi</p>
+                    </div>
+                    <span class="badge-exp">大厂工作经验</span>
+                </div>
+                <div class="side-edu">
+                    <span>数字媒体艺术专业</span>
+                    <span>全日制硕士</span>
+                </div>
+                <div class="side-contact">
+                    <div class="sc-row">
+                        <span><b>地址</b> 北京市朝阳区</span>
+                        <span><b>邮箱</b> yanjiaqi524138@163.com</span>
+                    </div>
+                    <div class="sc-row">
+                        <span><b>微信</b> Gemini_200524</span>
+                        <span><b>电话</b> 18762696691</span>
+                    </div>
+                </div>
+                <div class="side-footer">
+                    <span class="about-me-txt">ABOUT ME</span>
+                    <img src="assets/about-me-bar.png" alt="" class="about-me-stripes">
+                </div>
+            </aside>
+
+            <!-- 右：工作经验 + 技能 -->
+            <div class="resume-main">
+                <div class="reveal-up">
+                    <h4 class="resume-heading">工作经验</h4>
+                    <div class="exp-list">
+                        <!-- 经历 1 -->
+                        <div class="exp-item">
+                            <div class="exp-time">
+                                <span class="et-group"><span class="et-month">01月</span><span class="et-year">2026年</span></span>
+                                <span class="et-mid"><i class="et-dot"></i></span>
+                                <span class="et-group"><span class="et-month">07月</span><span class="et-year">2026年</span></span>
+                            </div>
+                            <div class="exp-body">
+                                <div class="exp-head">
+                                    <img src="assets/logo-meituan.png" alt="美团" class="exp-logo-icon">
+                                    <h5 class="exp-company">北京三快在线科技有限公司 – UI 设计</h5>
+                                </div>
+                                <ul class="exp-desc">
+                                    <li>参与妙蛙首页改版、游戏图标、H5长图绘制，同步完成相关关联需求</li>
+                                    <li>参与B端洋葱自动验收工具的页面优化，使用AI Coding提升界面设计效率</li>
+                                    <li>完成美团首页与外卖订单卡的高保真动效制作，提升与研发沟通效率</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- 经历 2 -->
+                        <div class="exp-item">
+                            <div class="exp-time">
+                                <span class="et-group"><span class="et-month">10月</span><span class="et-year">2025年</span></span>
+                                <span class="et-mid"><i class="et-dot"></i></span>
+                                <span class="et-group"><span class="et-month">01月</span><span class="et-year">2026年</span></span>
+                            </div>
+                            <div class="exp-body">
+                                <div class="exp-head">
+<img src="assets/logo-kingsoft.png" alt="金山云" class="exp-logo-icon">
+<h5 class="exp-company">北京金山云网络技术有限公司 – 体验设计</h5>
+                                </div>
+                                <ul class="exp-desc">
+                                    <li>参与金山星流 AI 训推平台的界面设计</li>
+                                    <li>独立为界面绘制 40+ icon</li>
+                                    <li>公司资料撰写与整理，为内部运营及外部合作提供可靠支持</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- 经历 3 -->
+                        <div class="exp-item">
+                            <div class="exp-time">
+                                <span class="et-group"><span class="et-month">04月</span><span class="et-year">2024年</span></span>
+                                <span class="et-mid"><i class="et-dot"></i></span>
+                                <span class="et-group"><span class="et-month">07月</span><span class="et-year">2025年</span></span>
+                            </div>
+                            <div class="exp-body">
+                                <div class="exp-head">
+<img src="assets/logo-telecom.png" alt="中国电信" class="exp-logo-icon">
+<h5 class="exp-company">中国电信人工智能研究院 – AIGC 影视设计</h5>
+                                </div>
+                                <ul class="exp-desc">
+                                    <li>参与中国电信研发云 B 端的界面设计</li>
+                                    <li>星辰大模型首页示范视频制作，提升产品首页视觉吸引力与功能传达效率</li>
+                                    <li>影视级 AI 视频制作，打造兼具艺术质感与技术创新的视觉内容</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 技能标签框（切图版） -->
+                <div class="skill-tabs reveal-up">
+                    <div class="skill-tab skill-tab-img">
+                        <img src="assets/skill-ui.png" alt="界面设计 - Mastergo / Figma">
+                    </div>
+                    <div class="skill-tab skill-tab-img">
+                        <img src="assets/skill-motion.png" alt="动效设计 - Protopie / AE">
+                    </div>
+                    <div class="skill-tab skill-tab-img">
+                        <img src="assets/skill-code.png" alt="AI 编程 - Cloud Code">
+                    </div>
+                    <div class="skill-tab skill-tab-img">
+                        <img src="assets/skill-aigc.png" alt="AIGC - 即梦">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ 作品目录 ============ -->
+    <section id="works" class="works">
+        <div class="section-head reveal-up">
+<h2 class="section-title">精选作品</h2>
+        </div>
+        <p class="works-lead reveal-up">四个作品，四段思考</p>
+
+        <div class="works-accordion reveal-up">
+<a href="work-detail.html?id=1" class="wa-card wa-card-1 is-active" data-index="0">
+<span class="wa-tag">品牌视觉</span>
+<img src="assets/work-cover-1.jpg" alt="品牌视觉" class="wa-cover" loading="eager" decoding="async">
+                <div class="wa-overlay"></div>
+                <div class="wa-body">
+                    <span class="wa-no">01</span>
+                    <h3 class="wa-name">项目一 · 品牌视觉</h3>
+                    <span class="wa-go">→</span>
+                </div>
+                <span class="wa-vertical">频道首页改版</span>
+            </a>
+
+<a href="work-detail.html?id=2" class="wa-card wa-card-2" data-index="1">
+<span class="wa-tag">界面设计</span>
+<img src="assets/work-cover-2.jpg" alt="界面设计" class="wa-cover" loading="eager" decoding="async">
+                <div class="wa-overlay"></div>
+                <div class="wa-body">
+                    <span class="wa-no">02</span>
+                    <h3 class="wa-name">项目二 · 界面设计</h3>
+                    <span class="wa-go">→</span>
+                </div>
+                <span class="wa-vertical">B端页面改版</span>
+            </a>
+
+<a href="work-detail.html?id=3" class="wa-card wa-card-3" data-index="2">
+<span class="wa-tag">动效设计</span>
+<img src="assets/work-cover-3.png" alt="动效设计" class="wa-cover" loading="eager" decoding="async">
+                <div class="wa-overlay"></div>
+                <div class="wa-body">
+                    <span class="wa-no">03</span>
+                    <h3 class="wa-name">项目三 · 动效设计</h3>
+                    <span class="wa-go">→</span>
+                </div>
+                <span class="wa-vertical">CEM组件设计</span>
+            </a>
+
+<a href="work-detail.html?id=4" class="wa-card wa-card-4" data-index="3">
+<span class="wa-tag">AIGC 视觉</span>
+<img src="assets/work-cover-4.jpg" alt="AIGC 视觉" class="wa-cover" loading="eager" decoding="async">
+                <div class="wa-overlay"></div>
+                <div class="wa-body">
+                    <span class="wa-no">04</span>
+                    <h3 class="wa-name">项目四 · AIGC 视觉</h3>
+                    <span class="wa-go">→</span>
+                </div>
+                <span class="wa-vertical">其他视觉展示</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- ============ 联系 ============ -->
+    <section id="contact" class="contact">
+        <div class="contact-inner">
+            <div class="section-head reveal-up">
+<h2 class="section-title">一起做点好玩的</h2>
+            </div>
+            <p class="contact-lead reveal-up">
+                有项目、想合作，或者只是想聊聊设计，都欢迎随时找我。
+            </p>
+
+            <div class="contact-cards">
+<div class="c-card reveal-up" style="--i:0; cursor:pointer" onclick="copyEmail(this)">
+<img src="assets/icon-email.png" alt="邮箱" class="c-ico-img" style="width:44px;height:44px">
+<span class="c-label">邮箱</span>
+<span class="c-value">yanjiaqi524138@163.com</span>
+</div>
+<div class="c-card reveal-up" style="--i:1; cursor:pointer" onclick="copyValue(this)">
+<img src="assets/icon-wechat.png" alt="微信" class="c-ico-img">
+<span class="c-label">微信</span>
+<span class="c-value">Gemini_200524</span>
+</div>
+<div class="c-card reveal-up" style="--i:2; cursor:pointer" onclick="copyValue(this)">
+<img src="assets/icon-phone.png" alt="电话" class="c-ico-img" style="width:44px;height:44px">
+<span class="c-label">电话</span>
+<span class="c-value">187 6269 6691</span>
+</div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <span>© 2026 严佳祺 · YAN JIAQI</span>
+            <span>Designed & built with care.</span>
+        </footer>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
