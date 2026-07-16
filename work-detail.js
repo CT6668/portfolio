@@ -104,38 +104,52 @@ function initProgress(total, disabled) {
     totalImages = total;
     loadedImages = 0;
     progressDisabled = !!disabled;
-    if (progressDisabled) return;
+
+    // If disabled (already cached), remove progress bar entirely
+    if (progressDisabled) {
+        if (progressEl && progressEl.parentNode) {
+            progressEl.parentNode.removeChild(progressEl);
+            progressEl = null;
+        }
+        return;
+    }
+
     if (!progressEl) {
         progressEl = document.createElement('div');
         progressEl.className = 'load-progress';
         document.body.appendChild(progressEl);
     }
     progressEl.style.width = '0%';
-    progressEl.classList.remove('done');
     progressEl.style.opacity = '1';
-    // Update percentage text
-    updateProgressText();
-}
-
-function updateProgressText() {
-    if (progressDisabled || !progressEl) return;
-    var pct = totalImages > 0 ? Math.round(loadedImages / totalImages * 100) : 0;
-    progressEl.setAttribute('data-pct', pct + '%');
+    progressEl.style.display = 'block';
+    progressEl.setAttribute('data-pct', '0%');
 }
 
 function updateProgress() {
     loadedImages++;
-    if (progressDisabled || !progressEl) return;
+    if (progressDisabled) {
+        // Still mark as loaded even if progress is hidden
+        if (loadedImages >= totalImages) {
+            try { sessionStorage.setItem('work_loaded_' + getCurrentWorkId(), '1'); } catch(e) {}
+        }
+        return;
+    }
+    if (!progressEl) return;
     var pct = Math.round(loadedImages / totalImages * 100);
     progressEl.style.width = pct + '%';
     progressEl.setAttribute('data-pct', pct + '%');
     if (loadedImages >= totalImages) {
         // Mark this work as fully loaded
-        try {
-            var workId = getCurrentWorkId();
-            sessionStorage.setItem('work_loaded_' + workId, '1');
-        } catch(e) {}
-        setTimeout(function() { progressEl.classList.add('done'); }, 300);
+        try { sessionStorage.setItem('work_loaded_' + getCurrentWorkId(), '1'); } catch(e) {}
+        // Progress bar disappears immediately at 100%
+        setTimeout(function() {
+            if (progressEl) {
+                progressEl.style.opacity = '0';
+                setTimeout(function() {
+                    if (progressEl) progressEl.style.display = 'none';
+                }, 400);
+            }
+        }, 200);
     }
 }
 
@@ -304,7 +318,7 @@ function buildPages() {
         section.className = 'fp-page';
 
 if (page.type === 'image') {
-            // Create placeholder with correct aspect ratio
+            // Create placeholder with blur-up thumbnail background
             var placeholder = document.createElement('div');
             placeholder.className = 'fp-page-placeholder';
             var placeholderH = '56.25%'; // default 16:9
@@ -313,6 +327,14 @@ if (page.type === 'image') {
             }
             placeholder.style.paddingBottom = placeholderH;
             placeholder.dataset.height = placeholderH;
+
+            // Set blur-up thumbnail as background (if available)
+            var thumbData = (typeof BLUR_THUMBS !== 'undefined') ? BLUR_THUMBS[page.src] : null;
+            if (thumbData) {
+                placeholder.style.backgroundImage = 'url(' + thumbData + ')';
+                placeholder.style.backgroundSize = 'cover';
+                placeholder.style.backgroundPosition = 'center';
+            }
 
             // Create image (hidden initially, no src yet)
             var img = document.createElement('img');
@@ -481,9 +503,9 @@ if (page.type === 'image') {
 
     initProgress(imageCount, skipProgressAndToast);
 
-    // Show loading status toast (only first time)
+    // Show loading status toast (only first time, never for cached works)
     if (!skipProgressAndToast && imageCount > 3) {
-        showToast('正在加载作品图片 (0/' + imageCount + ')...', 3000);
+        showToast('作品资源较大，正在加载中...', 3000);
     }
 
     // Start loading immediately

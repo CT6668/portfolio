@@ -55,32 +55,35 @@ button.nav-cta svg {
 
 /* ========== Loading states ========== */
 
-/* Shimmer skeleton placeholder */
+/* Blur-up placeholder (shows tiny blurred thumbnail while loading) */
 .fp-page-placeholder {
     width: 100%;
     background: #f0f0f0;
     position: relative;
     overflow: hidden;
+    /* Blur the tiny thumbnail to create a smooth preview */
+    filter: blur(12px);
+    transform: scale(1.03); /* Slightly overscale to hide blur edges */
 }
 .fp-page-placeholder::after {
     content: '';
     position: absolute;
     top: 0; left: -100%; width: 50%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-    animation: shimmer 1.8s ease-in-out infinite;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+    animation: shimmer 2.2s ease-in-out infinite;
 }
 @keyframes shimmer {
     0% { left: -50%; }
     100% { left: 150%; }
 }
 
-/* Image fade in */
+/* Image fade in over blur placeholder */
 .fp-page-img.loading {
     opacity: 0;
 }
 .fp-page-img.loaded {
     opacity: 1;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.4s ease;
 }
 
 /* Error state with retry */
@@ -140,9 +143,8 @@ button.nav-cta svg {
     pointer-events: none;
     padding-right: 4px;
 }
-.load-progress.done {
-    opacity: 0;
-    transition: width 0.3s ease, opacity 0.5s ease 0.3s;
+.load-progress {
+    transition: width 0.3s ease, opacity 0.4s ease;
 }
 
 /* Toast notification */

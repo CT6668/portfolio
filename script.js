@@ -216,20 +216,55 @@
         update();
     }
 
-    /* ---------- 10. 页面加载动画 ---------- */
+    /* ---------- 10. 页面加载动画(带模糊背景+进度+安抚文案) ---------- */
     function pageLoadAnim() {
         var loader = document.createElement('div');
         loader.className = 'page-loader';
-        loader.innerHTML = '<div class="loader-bar"></div>';
+        loader.innerHTML = '<div class="loader-bg"></div>' +
+            '<div class="loader-content">' +
+            '<div class="loader-text">作品资源较大，正在为你加载中<br>请稍候片刻 ...</div>' +
+            '<div class="loader-bar"><div class="loader-bar-fill"></div></div>' +
+            '<div class="loader-pct">0%</div>' +
+            '</div>';
         document.body.appendChild(loader);
 
+        // Set blurred hero background
+        var bg = loader.querySelector('.loader-bg');
+        var heroImg = document.querySelector('.typewriter-img');
+        if (heroImg && heroImg.src) {
+            bg.style.backgroundImage = 'url(' + heroImg.src + ')';
+        }
+
+        // Track loading progress
+        var fill = loader.querySelector('.loader-bar-fill');
+        var pctEl = loader.querySelector('.loader-pct');
+        var resources = document.querySelectorAll('img[src], link[rel="stylesheet"]');
+        var total = Math.max(resources.length, 1);
+        var loaded = 0;
+
+        function tick() {
+            loaded++;
+            var pct = Math.min(Math.round(loaded / total * 100), 100);
+            fill.style.width = pct + '%';
+            pctEl.textContent = pct + '%';
+        }
+
+        resources.forEach(function(el) {
+            if (el.complete || el.sheet) { tick(); return; }
+            el.addEventListener('load', tick);
+            el.addEventListener('error', tick);
+        });
+
         window.addEventListener('load', function () {
+            // Ensure 100%
+            fill.style.width = '100%';
+            pctEl.textContent = '100%';
             setTimeout(function () {
                 loader.classList.add('loaded');
                 setTimeout(function () {
                     if (loader.parentNode) loader.parentNode.removeChild(loader);
-                }, 700);
-            }, 300);
+                }, 900);
+            }, 400);
         });
     }
 
