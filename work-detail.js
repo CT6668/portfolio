@@ -17,14 +17,17 @@ var cdnAvailable = true; // Assume CDN works; probe will update if it fails
     probe.src = CDN_PREFIX + 'assets/icon-play.png?' + Date.now(); // cache bust
 })();
 
+var ASSET_VERSION = 'v2'; // Bump this when replacing images to bust browser/CDN cache
+
 function cdnUrl(path) {
     // In local development (file:// or localhost), use relative path
     if (location.protocol === 'file:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
         return path;
     }
+    var suffix = (path.indexOf('?') === -1 ? '?' : '&') + '_=' + ASSET_VERSION;
     // If CDN probe failed, use direct GitHub Pages URL
-    if (!cdnAvailable) return path;
-    return CDN_PREFIX + path;
+    if (!cdnAvailable) return path + suffix;
+    return CDN_PREFIX + path + suffix;
 }
 
 var works = [
